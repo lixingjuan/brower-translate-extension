@@ -1,0 +1,10 @@
+.result li {
+  display: flex;
+}
+.result li div:nth-child(1) {
+  text-align: right;
+}
+.result li div:nth-child(2) {
+  text-align: left;
+  margin-left: 10px;
+}

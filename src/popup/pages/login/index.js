@@ -1,44 +1,62 @@
-import React from 'react'
-import { Button, Input } from 'antd'
-import carrot from './carrot.svg'
-import { apiReqs } from '@/api'
-import './login.styl'
+import React, { useState } from "react";
+import { Button, Input } from "antd";
+import carrot from "./carrot.svg";
+import { apiReqs } from "@/api";
+import "./login.styl";
+import "./login.css";
+
+const reg = new RegExp(/\"\s*\"/);
+
+const { TextArea } = Input;
 
 function Login(props) {
+  const [inputVal, setInputVal] = useState(`"中国" "hello"`);
+  const [inputArr, setInputArr] = useState([]);
 
-	const login = () => {
-		apiReqs.signIn({
-			success: (res) => {
-				console.log(res)
-				alert(res.data.nickname)
-				props.history.push('/home')
-			},
-			fail: (res) => {
-				alert(res)
-			}
-		})	
-	}
+  const onChange = (val) => {
+    // console.log(val.target.value);
+    // localStorage.setItem("demo", JSON.stringify(val.target.value));
+    // "你好" "hello"
 
-	return (
-		<div className="P-login">
-			<img src={carrot} alt="" className="carrot" />
-			<div className="login-con">
-				<div className="ipt-con">
-					<Input
-						placeholder="请输入账号"
-						size="large"
-					/>
-				</div>
-				<div className="ipt-con">
-					<Input.Password
-						placeholder="请输入密码"
-						size="large"
-					/>
-				</div>
-				<Button type="primary" size="large" onClick={login}>登录</Button>
-			</div>
-		</div>
-	);
+    setInputVal(val.target.value);
+    const res = val.target.value
+      .split("\n")
+      .map((it) => it.trim().split(reg))
+      .map((it) => it.map((it) => it.slice(1, -1)))
+      .filter((it) => it);
+
+    setInputArr(res);
+    console.log("ceeee", res);
+  };
+
+  return (
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        width: "800px",
+      }}
+    >
+      <TextArea
+        row={8}
+        value={inputVal}
+        onChange={onChange}
+        style={{ minHeight: "300px" }}
+      />
+
+      <h2>result</h2>
+
+      <ul className="result">
+        {inputArr.map(([zhStr, enStr]) => (
+          <li>
+            <span>{zhStr}</span>
+            <span>{enStr}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
 }
 
-export default Login
+export default Login;
